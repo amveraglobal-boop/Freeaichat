@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Advanced Chat — Gemini & DeepSeek</title>
+  <style>
+    :root{
+      --accent:#6C5CE7;
+      --muted:#666;
+      --midnight:#0a174e;
+    }
+    body{
+      font-family:Inter,Segoe UI,Arial;
+      margin:0;
+      background:#fff;
+      color:var(--midnight);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+    .card{
+      background:linear-gradient(180deg,rgba(240,240,255,0.12),rgba(255,255,255,0.98));
+      border-radius:16px;
+      padding:28px;
+      max-width:900px;
+      width:100%;
+      box-shadow:0 8px 30px rgba(10,23,78,0.08);
+    }
+    h1{margin:0 0 12px;font-size:22px;color:var(--midnight);}
+    .models{display:flex;gap:16px;margin:16px 0}
+    .model{
+      flex:1;
+      background:rgba(10,23,78,0.03);
+      border-radius:12px;
+      padding:18px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      cursor:pointer;
+      border:2px solid transparent;
+      color:var(--midnight);
+    }
+    .model input{transform:scale(1.8);margin-right:12px}
+    .model h3{margin:0;font-size:16px;color:var(--midnight);}
+    .model p{margin:4px 0 0;color:var(--muted);font-size:13px}
+    .model.selected{border-color:var(--accent);box-shadow:0 6px 18px rgba(108,92,231,0.12)}
+    textarea{
+      width:100%;
+      min-height:120px;
+      border-radius:10px;
+      padding:12px;
+      border:1px solid #e0e6f0;
+      background:#fff;
+      color:var(--midnight);
+      resize:vertical;
+      font-size:16px;
+    }
+    .controls{display:flex;gap:12px;align-items:center;margin-top:12px}
+    button{background:var(--accent);color:white;border:none;padding:10px 14px;border-radius:10px;cursor:pointer}
+    .responses{margin-top:18px;display:flex;flex-direction:column;gap:12px}
+    .resp{
+      background:rgba(10,23,78,0.04);
+      padding:12px;
+      border-radius:10px;
+      color:var(--midnight);
+      font-size:16px;
+    }
+    .meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .small{font-size:13px;color:var(--muted)}
+    .actions{display:flex;gap:8px}
+    a.action{
+      background:transparent;
+      border:1px solid #e0e6f0;
+      padding:8px 10px;
+      border-radius:8px;
+      color:var(--midnight);
+      text-decoration:none;
+    }
+    footer{margin-top:16px;color:var(--muted);font-size:13px}
+  </style>
+</head>
+<body>
+
+  <!-- Access Key Gate -->
+  <div id="key-gate">
+    <form id="key-form" style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:24px;">
+      <label for="access-key" style="font-size:16px;color:var(--midnight);">Enter Access Key:</label>
+      <input type="password" id="access-key" autocomplete="off" style="font-size:16px;padding:8px 12px;border-radius:8px;border:1px solid #e0e6f0;" />
+      <button type="submit" style="font-size:16px;padding:8px 18px;border-radius:8px;background:var(--accent);color:white;border:none;">Unlock</button>
+      <div id="key-error" style="color:red;display:none;font-size:14px;">Incorrect key. Try again.</div>
+    </form>
+  </div>
+
+  <div id="chat-ui" style="display:none;">
+    <h1>Advanced Chat</h1>
+    <div>Choose model(s) and ask anything. Select one or both models — each selected model will return its own response.</div>
+
+    <div class="models" id="models">
+      <label class="model" data-model="google/gemini-2.5-pro">
+        <input type="checkbox" name="model" value="google/gemini-2.5-pro" />
+        <div>
+          <h3>Google: Gemini 2.5 Pro</h3>
+          <p>google/gemini-2.5-pro</p>
+        </div>
+      </label>
+
+      <label class="model" data-model="deepseek/deepseek-v3.2-exp">
+        <input type="checkbox" name="model" value="deepseek/deepseek-v3.2-exp" />
+        <div>
+          <h3>DeepSeek: DeepSeek V3.2 Exp</h3>
+          <p>deepseek/deepseek-v3.2-exp</p>
+        </div>
+      </label>
+    </div>
+
+    <textarea id="prompt" placeholder="Enter your question or prompt..." disabled></textarea>
+
+    <div class="controls">
+      <button id="send" disabled>Send</button>
+      <div class="small">Responses will appear below. Use Download or Share to save/send results.</div>
+    </div>
+
+    <div class="responses" id="responses"></div>
+
+    <footer>
+      Deployable to Railway. Provide OPENROUTER_API_KEY as an environment variable on the server.
+    </footer>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
